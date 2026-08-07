@@ -8,18 +8,13 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="icon.png">
 
-    <!-- Gotham Font (Montserrat Alternative) -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- JSZip & FileSaver for zip generation -->
+    <!-- JSZip & FileSaver -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-    <!-- Twemoji -->
-    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
 
     <style>
         :root {
@@ -43,6 +38,28 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--rbx-border) var(--rbx-panel-inner);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--rbx-panel-inner);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--rbx-border);
+            border-radius: 4px;
+            transition: background 0.15s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--rbx-blue);
         }
 
         body {
@@ -54,7 +71,6 @@
             flex-direction: column;
         }
 
-        /* Background Base Layer */
         .bg-overlay {
             position: fixed;
             inset: 0;
@@ -66,7 +82,6 @@
             z-index: -2;
         }
 
-        /* Smooth Dark Overlay Tint */
         .bg-overlay-tint {
             position: fixed;
             inset: 0;
@@ -74,7 +89,6 @@
             z-index: -1;
         }
 
-        /* Top Bar */
         header {
             height: 42px;
             background: var(--rbx-topbar);
@@ -105,14 +119,13 @@
             height: 23.1px;
             width: auto;
             object-fit: contain;
-            transition: transform 0.15s ease;
+            transition: transform 0.2s ease;
         }
 
         .header-brand .brand-logo:hover {
             transform: scale(1.08);
         }
 
-        /* Main Workspace Container */
         .main-container {
             max-width: 820px;
             width: 100%;
@@ -124,7 +137,6 @@
             gap: 16px;
         }
 
-        /* Classic Roblox Panel */
         .rbx-panel {
             background: var(--rbx-panel);
             border: 1px solid var(--rbx-border);
@@ -145,6 +157,17 @@
             margin-top: 4px;
         }
 
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .rbx-alert {
             background: var(--alert-bg);
             border: 1px solid var(--alert-border);
@@ -157,9 +180,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            animation: popIn 0.25s ease-out forwards;
         }
 
-        /* Form Layout */
         .form-grid {
             display: flex;
             flex-direction: column;
@@ -208,6 +231,7 @@
             font-family: inherit;
             font-size: 13px;
             outline: none;
+            transition: border-color 0.15s ease;
         }
 
         input[type="text"]::placeholder {
@@ -249,7 +273,6 @@
             text-align: center;
         }
 
-        /* Action Buttons */
         .action-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -264,19 +287,25 @@
         }
 
         .rbx-btn {
-            height: 38px;
-            border-radius: 3px;
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 4px;
             border: none;
             font-family: inherit;
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: flex-start;
+            gap: 10px;
             text-decoration: none;
-            transition: background-color 0.1s ease;
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+        }
+
+        .rbx-btn:active:not(:disabled) {
+            opacity: 0.9;
+            transform: scale(0.99);
         }
 
         .rbx-btn:disabled {
@@ -288,6 +317,7 @@
             background: var(--rbx-green);
             color: #ffffff;
             box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+            justify-content: center;
         }
 
         .rbx-btn-green:hover:not(:disabled) {
@@ -298,13 +328,188 @@
             background: var(--rbx-blue);
             color: #ffffff;
             box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+            justify-content: center;
         }
 
         .rbx-btn-blue:hover:not(:disabled) {
             background: var(--rbx-blue-hover);
         }
 
-        /* Status & Progress Box */
+        .rbx-btn-purple {
+            background: #6a2bca;
+            color: #ffffff;
+            box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        .rbx-btn-purple:hover:not(:disabled) {
+            background: #5b22b1;
+            box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.3), 0 0 12px rgba(106, 43, 202, 0.3);
+        }
+
+        .history-btn-icon {
+            margin-left: auto;
+            font-size: 12px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .rbx-btn-purple.open .history-btn-icon {
+            transform: rotate(180deg);
+        }
+
+        .history-panel {
+            margin-top: 0;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            background: var(--rbx-panel-inner);
+            border: 1px solid transparent;
+            border-radius: 3px;
+            padding: 0 12px;
+            transform: translateY(-6px);
+            transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 0.3s ease, 
+                        margin-top 0.3s ease, 
+                        padding 0.3s ease,
+                        border-color 0.3s ease,
+                        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .history-panel.open {
+            margin-top: 12px;
+            max-height: 700px;
+            opacity: 1;
+            padding: 12px;
+            border-color: var(--rbx-border);
+            transform: translateY(0);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .history-header span {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--rbx-text);
+        }
+
+        .history-filter-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+            background: var(--rbx-panel);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--rbx-border);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            color: var(--rbx-text-sub);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            height: 32px;
+            font-size: 12px;
+            background: var(--rbx-panel-inner);
+            border: 1px solid var(--rbx-border);
+            color: var(--rbx-text);
+            border-radius: 3px;
+            padding: 0 8px;
+        }
+
+        .history-table-wrapper {
+            max-height: 420px;
+            overflow-y: auto;
+            border: 1px solid var(--rbx-border);
+            border-radius: 3px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background: var(--rbx-panel);
+            color: var(--rbx-text);
+            padding: 8px 10px;
+            position: sticky;
+            top: 0;
+            border-bottom: 1px solid var(--rbx-border);
+            font-weight: 700;
+            z-index: 10;
+        }
+
+        .history-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--rbx-border);
+            color: var(--rbx-text-sub);
+        }
+
+        .history-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-latest {
+            background: rgba(0, 178, 89, 0.25);
+            color: #00e673;
+            border: 1px solid #00b259;
+        }
+
+        .status-stable {
+            background: rgba(0, 162, 255, 0.18);
+            color: #00a2ff;
+            border: 1px solid #00a2ff;
+        }
+
+        .use-hash-btn {
+            padding: 2px 8px;
+            font-size: 11px;
+            height: 24px;
+            cursor: pointer;
+            border-radius: 3px;
+            border: none;
+            background: var(--rbx-blue);
+            color: white;
+            font-weight: 600;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+
+        .use-hash-btn:hover {
+            background: var(--rbx-blue-hover);
+        }
+
+        .use-hash-btn:active {
+            transform: scale(0.95);
+        }
+
         .status-box {
             margin-top: 12px;
             padding: 12px;
@@ -319,6 +524,7 @@
 
         .status-box.active {
             display: block;
+            animation: popIn 0.25s ease-out forwards;
         }
 
         .progress-bar-container {
@@ -338,7 +544,54 @@
             transition: width 0.2s ease;
         }
 
-        /* Footer & Projects Link */
+        .usage-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--rbx-text-sub);
+            margin-top: 12px;
+            margin-bottom: 16px;
+        }
+
+        .usage-list li {
+            position: relative;
+            padding-left: 18px;
+            line-height: 1.5;
+        }
+
+        .usage-list li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: var(--rbx-text-sub);
+        }
+
+        .usage-list strong {
+            color: var(--rbx-text);
+        }
+
+        code {
+            background: var(--rbx-panel-inner);
+            border: 1px solid var(--rbx-border);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--rbx-text);
+        }
+
+        .usage-params {
+            font-size: 13px;
+            color: var(--rbx-text-sub);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
         footer {
             background: var(--rbx-topbar);
             border-top: 1px solid var(--rbx-border);
@@ -360,13 +613,6 @@
             color: var(--rbx-text);
             text-decoration: underline;
         }
-
-        img.emoji {
-            height: 1.1em;
-            width: 1.1em;
-            margin: 0 0.1em;
-            vertical-align: -0.15em;
-        }
     </style>
 </head>
 <body>
@@ -376,7 +622,6 @@
 
     <header>
         <div class="header-brand">
-            <!-- Clicking the Roblox Icon takes you to Roblox.com! -->
             <a href="https://www.roblox.com" target="_blank" rel="noopener noreferrer" title="Go to Roblox.com">
                 <img src="icon.png" alt="Roblox Logo" class="brand-logo" onerror="this.style.display='none'">
             </a>
@@ -389,11 +634,11 @@
         <!-- Top Panel -->
         <div class="rbx-panel">
             <div class="rbx-panel-title">RDD - Roblox Deployment Downloader</div>
-            <div class="rbx-panel-sub">Unofficial • Made by Duckycash</div>
+            <div class="rbx-panel-sub">Copyright (c) 2025-2026 Latte Softworks | MIT</div>
             
             <div class="rbx-alert">
                 <i class="fa-solid fa-circle-info" style="color: var(--rbx-blue);"></i>
-                <span>Fetch direct deployment archives straight from Roblox CDN servers. ⚡</span>
+                <span>Fetch direct deployment archives straight from Roblox CDN servers.</span>
             </div>
         </div>
 
@@ -463,6 +708,75 @@
                     </button>
                 </div>
 
+                <!-- Toggle Version History API Dropdown -->
+                <div style="margin-top: 6px;">
+                    <button class="rbx-btn rbx-btn-purple" id="toggleHistoryBtn" style="width: 100%;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Version History API</span>
+                        <i class="fa-solid fa-chevron-down history-btn-icon"></i>
+                    </button>
+                </div>
+
+                <!-- History Panel -->
+                <div class="history-panel" id="historyPanel">
+                    <div class="history-header">
+                        <span id="historyTitle"><i class="fa-solid fa-server"></i> Roblox DeployHistory API List</span>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="history-filter-bar">
+                        <div class="filter-group">
+                            <label for="platformFilter">Platform</label>
+                            <select id="platformFilter">
+                                <option value="AUTO">Auto (Selected)</option>
+                                <option value="ALL">All Platforms</option>
+                                <option value="WindowsPlayer">WindowsPlayer</option>
+                                <option value="WindowsStudio">WindowsStudio</option>
+                                <option value="MacPlayer">MacPlayer</option>
+                                <option value="MacStudio">MacStudio</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="statusFilter">Status</label>
+                            <select id="statusFilter">
+                                <option value="ALL">All Statuses</option>
+                                <option value="Latest">Latest Only</option>
+                                <option value="Stable">Stable Only</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="sortOrder">Sort</label>
+                            <select id="sortOrder">
+                                <option value="NEWEST">Newest First</option>
+                                <option value="OLDEST">Oldest First</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="historySearch">Search Hash / Date</label>
+                            <input type="text" id="historySearch" placeholder="Filter versions..." class="history-search">
+                        </div>
+                    </div>
+
+                    <div class="history-table-wrapper">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Binary</th>
+                                    <th>Version Hash</th>
+                                    <th>Release Date</th>
+                                    <th>Status</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 12px;">Click the button above to load history from API...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Status & Progress Box -->
                 <div class="status-box" id="statusBox">
                     <span id="statusText">Ready</span>
@@ -474,6 +788,26 @@
             </div>
         </div>
 
+        <!-- Usage Panel -->
+        <div class="rbx-panel">
+            <div class="rbx-panel-title">Usage</div>
+            
+            <ul class="usage-list">
+                <li>Select a <strong>Binary Type</strong> and optionally enter a <strong>Channel</strong> (defaults to <code>LIVE</code>).</li>
+                <li>Leave <strong>Version Hash</strong> empty to grab the latest, or paste a specific hash.</li>
+                <li><strong>Compress Zip</strong>: Reduces the overall size of the zip file, but takes longer to process.</li>
+                <li><strong>Download Latest</strong>: Fetches the current live build.</li>
+                <li><strong>Download Previous</strong>: Fetches the previous build (downgrade).</li>
+                <li><strong>Copy Link</strong>: Copies a direct URL for the selected configuration.</li>
+                <li><strong>Download WebLauncher</strong>: Downloads the latest WEAO WebLauncher executable.</li>
+                <li>Enable <strong>Include Launcher</strong>: To launch directly from Roblox or private servers.</li>
+            </ul>
+
+            <div class="usage-params">
+                Direct URL params: <code>?channel=&lt;NAME&gt;&amp;binaryType=&lt;TYPE&gt;&amp;version=&lt;HASH&gt;</code>
+            </div>
+        </div>
+
     </div>
 
     <footer>
@@ -481,11 +815,6 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            twemoji.parse(document.body);
-        });
-
-        // Downloader Core Logic
         const binaryType = document.getElementById('binaryType');
         const channelInput = document.getElementById('channelInput');
         const versionHash = document.getElementById('versionHash');
@@ -494,17 +823,50 @@
         
         const downloadBtn = document.getElementById('downloadBtn');
         const copyBtn = document.getElementById('copyBtn');
+
+        const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+        const historyPanel = document.getElementById('historyPanel');
+        const historyTitle = document.getElementById('historyTitle');
+        const historyTableBody = document.getElementById('historyTableBody');
+        
+        const platformFilter = document.getElementById('platformFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const sortOrder = document.getElementById('sortOrder');
+        const historySearch = document.getElementById('historySearch');
         
         const statusBox = document.getElementById('statusBox');
         const statusText = document.getElementById('statusText');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
 
+        let loadedHistoryRecords = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('channel')) channelInput.value = urlParams.get('channel');
+            if (urlParams.has('binaryType')) binaryType.value = urlParams.get('binaryType');
+            if (urlParams.has('version')) versionHash.value = urlParams.get('version');
+        });
+
         const binaryLauncherMap = {
             WindowsPlayer: 'RobloxPlayerLauncher.exe',
             WindowsStudio: 'RobloxStudioLauncher.exe',
             MacPlayer: 'Roblox.dmg',
             MacStudio: 'RobloxStudio.dmg'
+        };
+
+        const versionEndpointMap = {
+            WindowsPlayer: 'version',
+            WindowsStudio: 'versionQTStudio',
+            MacPlayer: 'mac/version',
+            MacStudio: 'mac/versionStudio'
+        };
+
+        const staticBaseUrls = {
+            WindowsPlayer: 'https://setup.rbxcdn.com/RobloxPlayerLauncher.exe',
+            WindowsStudio: 'https://setup.rbxcdn.com/RobloxStudioLauncher.exe',
+            MacPlayer: 'https://setup.rbxcdn.com/mac/Roblox.dmg',
+            MacStudio: 'https://setup.rbxcdn.com/mac/RobloxStudio.dmg'
         };
 
         const defaultPackagesMap = {
@@ -524,50 +886,274 @@
             MacStudio: ['RobloxStudio.dmg']
         };
 
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                throw err;
+            }
+        }
+
+        function parseDeployHistoryText(text, isMac) {
+            const lines = text.split('\n');
+            const records = [];
+
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const hashMatch = line.match(/(version-[a-f0-9]+)/i);
+                if (!hashMatch) continue;
+
+                const hash = hashMatch[1];
+
+                let dateStr = 'Unknown';
+                const dateMatch = line.match(/at\s+([0-9\/:\sAPM]+?)(?:,|$)/i);
+                if (dateMatch) {
+                    dateStr = dateMatch[1].trim();
+                }
+
+                let targetType = isMac ? 'MacPlayer' : 'WindowsPlayer';
+
+                if (isMac) {
+                    if (line.includes('Studio') || line.includes('MacStudio')) {
+                        targetType = 'MacStudio';
+                    } else {
+                        targetType = 'MacPlayer';
+                    }
+                } else {
+                    if (line.includes('Studio64') || line.includes('Studio 64') || line.includes('Studio')) {
+                        targetType = 'WindowsStudio';
+                    } else {
+                        targetType = 'WindowsPlayer';
+                    }
+                }
+
+                records.push({
+                    type: targetType,
+                    hash: hash,
+                    date: dateStr,
+                    raw: line
+                });
+            }
+
+            return records;
+        }
+
+        async function fetchDeployHistoryAPI() {
+            const winUrls = [
+                'https://setup-rbxcdn.github.io/DeployHistory.txt',
+                `https://api.allorigins.win/raw?url=${encodeURIComponent('https://setup.rbxcdn.com/DeployHistory.txt')}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent('https://setup.rbxcdn.com/DeployHistory.txt')}`
+            ];
+
+            const macUrls = [
+                'https://setup-rbxcdn.github.io/mac/DeployHistory.txt',
+                `https://api.allorigins.win/raw?url=${encodeURIComponent('https://setup.rbxcdn.com/mac/DeployHistory.txt')}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent('https://setup.rbxcdn.com/mac/DeployHistory.txt')}`
+            ];
+
+            let winText = '';
+            let macText = '';
+
+            for (const url of winUrls) {
+                try {
+                    const res = await fetchWithTimeout(url, {}, 3500);
+                    if (res.ok) {
+                        const text = await res.text();
+                        if (text && text.includes('version-')) { winText = text; break; }
+                    }
+                } catch (e) {}
+            }
+
+            for (const url of macUrls) {
+                try {
+                    const res = await fetchWithTimeout(url, {}, 3500);
+                    if (res.ok) {
+                        const text = await res.text();
+                        if (text && text.includes('version-')) { macText = text; break; }
+                    }
+                } catch (e) {}
+            }
+
+            if (!winText && !macText) {
+                throw new Error('Could not fetch Roblox DeployHistory API.');
+            }
+
+            const winRecords = winText ? parseDeployHistoryText(winText, false) : [];
+            const macRecords = macText ? parseDeployHistoryText(macText, true) : [];
+
+            const combined = [...winRecords, ...macRecords];
+
+            const seenLatest = new Set();
+            combined.forEach(rec => {
+                if (!seenLatest.has(rec.type)) {
+                    rec.status = 'Latest';
+                    rec.statusClass = 'status-latest';
+                    seenLatest.add(rec.type);
+                } else {
+                    rec.status = 'Stable';
+                    rec.statusClass = 'status-stable';
+                }
+            });
+
+            return combined;
+        }
+
+        function renderHistoryTable(records) {
+            if (!records || records.length === 0) {
+                historyTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px; color: var(--rbx-text-sub);">No versions found.</td></tr>`;
+                return;
+            }
+
+            const pVal = platformFilter.value;
+            const targetPlatform = pVal === 'AUTO' ? binaryType.value : pVal;
+            const sVal = statusFilter.value;
+            const sortVal = sortOrder.value;
+            const filterText = historySearch.value.toLowerCase().trim();
+
+            historyTitle.innerHTML = `<i class="fa-solid fa-server"></i> ${targetPlatform === 'ALL' ? 'All Platforms' : targetPlatform} Version History`;
+
+            let filtered = records.filter(r => {
+                const matchPlatform = (targetPlatform === 'ALL') || (r.type === targetPlatform);
+                const matchStatus = (sVal === 'ALL') || (r.status === sVal);
+                const matchSearch = !filterText || 
+                    r.hash.toLowerCase().includes(filterText) ||
+                    r.date.toLowerCase().includes(filterText) ||
+                    r.type.toLowerCase().includes(filterText) ||
+                    r.status.toLowerCase().includes(filterText);
+
+                return matchPlatform && matchStatus && matchSearch;
+            });
+
+            if (sortVal === 'OLDEST') {
+                filtered = [...filtered].reverse();
+            }
+
+            if (filtered.length === 0) {
+                historyTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px; color: var(--rbx-text-sub);">No matching versions found with current filters.</td></tr>`;
+                return;
+            }
+
+            historyTableBody.innerHTML = filtered.slice(0, 300).map(r => `
+                <tr>
+                    <td><strong>${r.type}</strong></td>
+                    <td><code>${r.hash}</code></td>
+                    <td>${r.date}</td>
+                    <td><span class="status-badge ${r.statusClass}">${r.status}</span></td>
+                    <td><button class="use-hash-btn" onclick="applyVersionHash('${r.hash}', '${r.type}')">Use</button></td>
+                </tr>
+            `).join('');
+        }
+
+        platformFilter.addEventListener('change', () => renderHistoryTable(loadedHistoryRecords));
+        statusFilter.addEventListener('change', () => renderHistoryTable(loadedHistoryRecords));
+        sortOrder.addEventListener('change', () => renderHistoryTable(loadedHistoryRecords));
+        historySearch.addEventListener('input', () => renderHistoryTable(loadedHistoryRecords));
+
+        binaryType.addEventListener('change', () => {
+            if (platformFilter.value === 'AUTO' && loadedHistoryRecords.length > 0) {
+                renderHistoryTable(loadedHistoryRecords);
+            }
+        });
+
+        window.applyVersionHash = function(hash, type) {
+            versionHash.value = hash;
+            if (type && binaryType.querySelector(`option[value="${type}"]`)) {
+                binaryType.value = type;
+            }
+            updateStatus(`Applied hash <strong>${hash}</strong> for ${type}.`);
+        };
+
+        toggleHistoryBtn.addEventListener('click', async () => {
+            const isOpen = historyPanel.classList.contains('open');
+
+            if (isOpen) {
+                historyPanel.classList.remove('open');
+                toggleHistoryBtn.classList.remove('open');
+            } else {
+                historyPanel.classList.add('open');
+                toggleHistoryBtn.classList.add('open');
+
+                if (loadedHistoryRecords.length === 0) {
+                    historyTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px;">Fetching live API history...</td></tr>`;
+                    try {
+                        loadedHistoryRecords = await fetchDeployHistoryAPI();
+                        renderHistoryTable(loadedHistoryRecords);
+                    } catch (err) {
+                        historyTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px; color: #ff5555;">⚠️ ${err.message}</td></tr>`;
+                    }
+                } else {
+                    renderHistoryTable(loadedHistoryRecords);
+                }
+            }
+        });
+
         async function resolveVersionHash() {
             let userHash = versionHash.value.trim();
             if (userHash) return userHash;
 
             const channel = channelInput.value.trim() || 'LIVE';
             const isLive = channel.toUpperCase() === 'LIVE';
+            const type = binaryType.value;
+            const endpoint = versionEndpointMap[type] || 'version';
 
             const versionUrl = isLive
-                ? `https://setup.rbxcdn.com/version`
-                : `https://setup.rbxcdn.com/channel/${channel.toLowerCase()}/version`;
+                ? `https://setup.rbxcdn.com/${endpoint}`
+                : `https://setup.rbxcdn.com/channel/${channel.toLowerCase()}/${endpoint}`;
 
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(versionUrl)}`;
+            const proxies = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(versionUrl)}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(versionUrl)}`,
+                `https://corsproxy.io/?${encodeURIComponent(versionUrl)}`
+            ];
 
-            try {
-                updateStatus(`Resolving latest version for channel ${channel}...`);
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Could not fetch version hash');
-                const fetchedHash = (await response.text()).trim();
-                return fetchedHash;
-            } catch (err) {
+            updateStatus(`Resolving latest version for ${type}...`);
+
+            for (const proxyUrl of proxies) {
                 try {
-                    const fallbackProxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(versionUrl)}`;
-                    const response = await fetch(fallbackProxy);
-                    const fetchedHash = (await response.text()).trim();
-                    return fetchedHash;
-                } catch (fallbackErr) {
-                    throw new Error('Failed to resolve version hash. Please specify one manually.');
-                }
+                    const response = await fetchWithTimeout(proxyUrl, {}, 2500);
+                    if (response.ok) {
+                        const fetchedHash = (await response.text()).trim();
+                        if (fetchedHash && fetchedHash.startsWith('version-')) {
+                            return fetchedHash;
+                        }
+                    }
+                } catch (e) {}
             }
+
+            return "";
         }
 
-        function getCdnPrefix(version) {
+        function getDownloadUrl(version) {
+            const type = binaryType.value;
+            const file = binaryLauncherMap[type] || 'RobloxPlayerLauncher.exe';
+
+            if (!version) {
+                return staticBaseUrls[type] || `https://setup.rbxcdn.com/${file}`;
+            }
+
             const channel = channelInput.value.trim() || 'LIVE';
             const isLive = channel.toUpperCase() === 'LIVE';
 
-            return isLive
+            const prefix = isLive
                 ? `https://setup.rbxcdn.com/${version}-`
                 : `https://setup.rbxcdn.com/channel/${channel.toLowerCase()}/${version}-`;
+
+            return prefix + file;
         }
 
         function updateStatus(msg, showProgress = false, percent = 0) {
+            statusBox.classList.remove('active');
+            void statusBox.offsetWidth;
             statusBox.classList.add('active');
+
             statusText.innerHTML = msg;
-            twemoji.parse(statusText);
 
             if (showProgress) {
                 progressContainer.style.display = 'block';
@@ -577,16 +1163,45 @@
             }
         }
 
+        async function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (err) {}
+            }
+
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                textArea.remove();
+                return successful;
+            } catch (err) {
+                textArea.remove();
+                return false;
+            }
+        }
+
         copyBtn.addEventListener('click', async () => {
             try {
                 copyBtn.disabled = true;
                 const version = await resolveVersionHash();
-                const prefix = getCdnPrefix(version);
-                const file = binaryLauncherMap[binaryType.value] || 'RobloxPlayerLauncher.exe';
-                const finalUrl = prefix + file;
+                const finalUrl = getDownloadUrl(version);
 
-                await navigator.clipboard.writeText(finalUrl);
-                updateStatus(`<strong>Link Copied to Clipboard!</strong><br><a href="${finalUrl}" target="_blank" style="color: var(--rbx-blue);">${finalUrl}</a>`);
+                const copied = await copyToClipboard(finalUrl);
+
+                if (copied) {
+                    updateStatus(`<strong>Link Copied to Clipboard!</strong><br><a href="${finalUrl}" target="_blank" rel="noopener" style="color: var(--rbx-blue); text-decoration: underline;">${finalUrl}</a>`);
+                } else {
+                    updateStatus(`<strong>Here is your link:</strong><br><a href="${finalUrl}" target="_blank" rel="noopener" style="color: var(--rbx-blue); font-weight: bold; text-decoration: underline;">${finalUrl}</a>`);
+                }
             } catch (err) {
                 updateStatus(`<span style="color: #ff5555;">⚠️ ${err.message}</span>`);
             } finally {
@@ -598,15 +1213,24 @@
             try {
                 downloadBtn.disabled = true;
                 const version = await resolveVersionHash();
-                const prefix = getCdnPrefix(version);
                 const type = binaryType.value;
 
                 if (!compressZip.checked) {
+                    const downloadUrl = getDownloadUrl(version);
                     const file = binaryLauncherMap[type] || 'RobloxPlayerLauncher.exe';
-                    const downloadUrl = prefix + file;
                     
-                    updateStatus(`Starting download for ${file}...`);
-                    window.open(downloadUrl, '_blank');
+                    updateStatus(`Downloading ${file} directly from Roblox CDN...`);
+
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = file;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    updateStatus(`<strong>Download Started!</strong><br>If your browser blocked the download, <a href="${downloadUrl}" target="_blank" rel="noopener" style="color: var(--rbx-blue); font-weight: bold; text-decoration: underline;">click here to download directly</a>`);
                 } else {
                     const level = parseInt(compressLevel.value) || 5;
                     const packageList = defaultPackagesMap[type] || defaultPackagesMap.WindowsPlayer;
@@ -614,24 +1238,40 @@
                     const zip = new JSZip();
                     let completed = 0;
 
-                    updateStatus(`Bundling ${packageList.length} files into zip...`, true, 0);
+                    updateStatus(`Bundling package files into zip...`, true, 0);
+
+                    const channel = channelInput.value.trim() || 'LIVE';
+                    const isLive = channel.toUpperCase() === 'LIVE';
+                    const prefix = isLive
+                        ? `https://setup.rbxcdn.com/${version ? version + '-' : ''}`
+                        : `https://setup.rbxcdn.com/channel/${channel.toLowerCase()}/${version ? version + '-' : ''}`;
 
                     for (const fileName of packageList) {
                         const fileUrl = prefix + fileName;
-                        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(fileUrl)}`;
+                        let blob = null;
 
-                        try {
-                            const res = await fetch(proxyUrl);
-                            if (!res.ok) throw new Error(`Failed file: ${fileName}`);
-                            const blob = await res.blob();
+                        const proxies = [
+                            `https://api.allorigins.win/raw?url=${encodeURIComponent(fileUrl)}`,
+                            `https://corsproxy.io/?${encodeURIComponent(fileUrl)}`
+                        ];
+
+                        for (const proxyUrl of proxies) {
+                            try {
+                                const res = await fetchWithTimeout(proxyUrl, {}, 5000);
+                                if (res.ok) {
+                                    blob = await res.blob();
+                                    break;
+                                }
+                            } catch (e) {}
+                        }
+
+                        if (blob) {
                             zip.file(fileName, blob);
-                        } catch (e) {
-                            console.warn(`Skipped ${fileName} due to fetch block`);
                         }
 
                         completed++;
                         const percent = Math.round((completed / packageList.length) * 80);
-                        updateStatus(`Downloading ${fileName} (${completed}/${packageList.length})...`, true, percent);
+                        updateStatus(`Fetching ${fileName} (${completed}/${packageList.length})...`, true, percent);
                     }
 
                     updateStatus(`Compressing ZIP (Level ${level})...`, true, 90);
@@ -640,13 +1280,10 @@
                         type: 'blob',
                         compression: 'DEFLATE',
                         compressionOptions: { level: level }
-                    }, (metadata) => {
-                        const percent = 90 + Math.round(metadata.percent * 0.1);
-                        updateStatus(`Compressing ZIP... ${Math.round(metadata.percent)}%`, true, percent);
                     });
 
-                    saveAs(zipContent, `${type}-${version}.zip`);
-                    updateStatus(`<strong>Download Complete!</strong> Package saved as ${type}-${version}.zip`);
+                    saveAs(zipContent, `${type}${version ? '-' + version : ''}.zip`);
+                    updateStatus(`<strong>Download Complete!</strong> Saved zip package.`);
                 }
             } catch (err) {
                 updateStatus(`<span style="color: #ff5555;">⚠️ ${err.message}</span>`);
